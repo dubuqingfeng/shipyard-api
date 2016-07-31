@@ -14,7 +14,12 @@ class Config
     protected static $data = array(
         "auth_login" => "/auth/login",
         "list_accounts" => "/api/accounts",
-        "list_events" => "/api/events"
+        "list_events" => "/api/events",
+        "list_nodes" => "/api/nodes",
+        "list_registries" => "/api/registries",
+        "list_service_keys" => "/api/servicekeys",
+        "list_webhook_keys" => "/api/webhookkeys",
+        "list_roles" => "/api/roles",
     );
 
     public static function getIns()

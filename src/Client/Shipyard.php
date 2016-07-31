@@ -35,9 +35,9 @@ class Shipyard implements ClientInterface
         $this->settings = $settings;
     }
 
-    public function get($uri, $class)
+    public function post($uri, $data)
     {
-        return $this->request($uri, 'GET', $this->getAuth(null))->getBody();
+        echo $this->request($uri, 'POST', $this->getAuth($data))->getBody();
     }
 
     public function request($uri, $method, array $options = array())
@@ -79,19 +79,15 @@ class Shipyard implements ClientInterface
         return $content->auth_token;
     }
 
-    public function post($uri, $data)
-    {
-        echo $this->request($uri, 'POST', $this->getAuth($data))->getBody();
-    }
-
-    public function delete($uri, $data, $class)
+    public function delete($uri, $data)
     {
         return $this->request($uri, 'DELETE', $this->getAuth($data))->getBody();
     }
 
     public function getHost()
     {
-        // TODO: Implement getHost() method.
+        $result = $this->get(Config::getIns()->list_nodes);
+        return $this->getCollection($result);
     }
 
     public function getImages($host)
@@ -102,28 +98,35 @@ class Shipyard implements ClientInterface
     public function getAccounts()
     {
         // TODO: 封装并反射类
-        $result = $this->get(Config::getIns()->list_accounts, "Account");
-        $json = json_decode($result, true);
-        $collection = new Collection();
-        foreach ($json as $key => $value) {
-            $collection->set($key, $value);
-        }
-        return $collection;
+        $result = $this->get(Config::getIns()->list_accounts);
+        return $this->getCollection($result);
+    }
+
+    public function get($uri)
+    {
+        return $this->request($uri, 'GET', $this->getAuth(null))->getBody();
     }
 
     public function getRegistries()
     {
-        // TODO: Implement getRegistries() method.
+        $result = $this->get(Config::getIns()->list_registries);
+        return $this->getCollection($result);
     }
 
     public function getServiceKeys()
     {
-        // TODO: Implement getServiceKeys() method.
+        $result = $this->get(Config::getIns()->list_service_keys);
+        return $this->getCollection($result);
     }
 
     public function getEvents()
     {
-        $result = $this->get(Config::getIns()->list_events, "");
+        $result = $this->get(Config::getIns()->list_events);
+        return $this->getCollection($result);
+    }
+
+    public function getCollection($result)
+    {
         $json = json_decode($result, true);
         $collection = new Collection();
         foreach ($json as $key => $value) {

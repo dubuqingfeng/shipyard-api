@@ -13,7 +13,7 @@ interface ClientInterface
      * @param $class
      * @return mixed
      */
-    public function get($uri, $class);
+    public function get($uri);
 
     /**
      * @param $uri
@@ -21,7 +21,7 @@ interface ClientInterface
      * @param $class
      * @return mixed
      */
-    public function delete($uri, $data, $class);
+    public function delete($uri, $data);
 
     /**
      * @param $uri

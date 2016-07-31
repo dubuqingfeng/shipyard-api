@@ -14,4 +14,5 @@ $settings = array(
 //$shipyard = new Shipyard($settings);
 $test = new \Dubuqingfeng\ShipyardAPI\Client\Shipyard($settings);
 $get = $test->getAccounts();
-print_r($get->_items);
+//print_r($get);
+print_r($test->getHost());
