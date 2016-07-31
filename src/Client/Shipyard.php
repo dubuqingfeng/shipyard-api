@@ -8,7 +8,6 @@
 namespace Dubuqingfeng\ShipyardAPI\Client;
 
 
-use Dubuqingfeng\ShipyardAPI\Entity\Account;
 use Dubuqingfeng\ShipyardAPI\Exception\AuthFalseException;
 use Dubuqingfeng\ShipyardAPI\Exception\Exception;
 use GuzzleHttp\Client;
@@ -38,7 +37,7 @@ class Shipyard implements ClientInterface
 
     public function get($uri, $class)
     {
-        echo $this->request($uri, 'GET', $this->getAuth(null))->getBody();
+        return $this->request($uri, 'GET', $this->getAuth(null))->getBody();
     }
 
     public function request($uri, $method, array $options = array())
@@ -70,7 +69,6 @@ class Shipyard implements ClientInterface
         } else {
             throw new AuthFalseException();
         }
-        var_dump($options);
         return $options;
     }
 
@@ -88,7 +86,6 @@ class Shipyard implements ClientInterface
 
     public function delete($uri, $data, $class)
     {
-        // TODO: Implement delete() method.
         return $this->request($uri, 'DELETE', $this->getAuth($data))->getBody();
     }
 
@@ -104,7 +101,14 @@ class Shipyard implements ClientInterface
 
     public function getAccounts()
     {
-        return new Account();
+        // TODO: 封装并反射类
+        $result = $this->get("/api/accounts", "Account");
+        $json = json_decode($result, true);
+        $collection = new Collection();
+        foreach ($json as $key => $value) {
+            $collection->set($key, $value);
+        }
+        return $collection;
     }
 
     public function getRegistries()
@@ -119,6 +123,12 @@ class Shipyard implements ClientInterface
 
     public function getEvents()
     {
-        // TODO: Implement getEvents() method.
+        $result = $this->get("/api/events", "");
+        $json = json_decode($result, true);
+        $collection = new Collection();
+        foreach ($json as $key => $value) {
+            $collection->set($key, $value);
+        }
+        return $collection;
     }
 }
