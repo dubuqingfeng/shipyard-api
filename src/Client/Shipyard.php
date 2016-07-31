@@ -47,7 +47,6 @@ class Shipyard implements ClientInterface
             return $response;
         } catch (RequestException $e) {
             echo $e->getMessage();
-            echo $e->getResponse()->getBody();
             return null;
         }
     }
@@ -67,6 +66,7 @@ class Shipyard implements ClientInterface
             $token = $this->auth($this->settings['username'], $this->settings['password']);
             $options['headers']['X-Access-Token'] = $this->settings['username'] . ":" . $token;
         } else {
+            echo "AuthFalse";
             throw new AuthFalseException();
         }
         return $options;
@@ -75,7 +75,7 @@ class Shipyard implements ClientInterface
     public function auth($username, $password)
     {
         $auth = array("username" => $username, "password" => $password);
-        $content = json_decode($this->request("/auth/login", 'POST', ['body' => json_encode($auth)])->getBody());
+        $content = json_decode($this->request(Config::getIns()->auth_login, 'POST', ['body' => json_encode($auth)])->getBody());
         return $content->auth_token;
     }
 
@@ -102,7 +102,7 @@ class Shipyard implements ClientInterface
     public function getAccounts()
     {
         // TODO: 封装并反射类
-        $result = $this->get("/api/accounts", "Account");
+        $result = $this->get(Config::getIns()->list_accounts, "Account");
         $json = json_decode($result, true);
         $collection = new Collection();
         foreach ($json as $key => $value) {
@@ -123,7 +123,7 @@ class Shipyard implements ClientInterface
 
     public function getEvents()
     {
-        $result = $this->get("/api/events", "");
+        $result = $this->get(Config::getIns()->list_events, "");
         $json = json_decode($result, true);
         $collection = new Collection();
         foreach ($json as $key => $value) {
